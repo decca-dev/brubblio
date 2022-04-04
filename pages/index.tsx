@@ -1,93 +1,32 @@
 import type { NextPage } from "next";
-import ChatBox from "../components/ChatBox";
-import PlayerList from "../components/PlayerList";
-import DrawingCanvas from "../components/DrawingCanvas";
-import Palette from "../components/Palette";
 import { useMetaData } from "../lib/hooks/useMetaData";
+import UserForm from "../components/UserForm";
+import Header from "../components/Header";
 
 const Home: NextPage = () => {
-  const players = [
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-    {
-      avatar:
-        "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded",
-      name: "Ass",
-      score: 69,
-    },
-  ];
-
   return (
     <>
       {useMetaData("Home", "Brubblio", "/")}
-      <div className="flex flex-row mt-5">
-        <PlayerList players={players} />
-        <DrawingCanvas />
-        <ChatBox />
+      <div className="container">
+        <div className="flex flex-col items-center text-center pb-10">
+          <Header title="The most fun multiplayer scribbling game" />
+          <UserForm />
+          <div className="my-5"></div>
+          <div
+            className="flex flex-row items-center justify-evenly"
+            onClick={() => (location.href = "/rooms")}
+          >
+            <button className="bg-green-500 w-28 h-10 rounded-xl text-white hover:scale-95 hover:-translate-y-1 transition-all delay-100 duration-200 ease-in-out">
+              Browse rooms
+            </button>
+            <button
+              className="bg-violet-500 w-28 h-10 rounded-xl text-white hover:scale-95 hover:-translate-y-1 transition-all delay-100 duration-200 ease-in-out"
+              onClick={() => () => (location.href = "/rooms/new")}
+            >
+              Create room
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );
