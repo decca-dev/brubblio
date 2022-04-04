@@ -2,8 +2,11 @@ import type { NextPage } from "next";
 import { useMetaData } from "../../lib/hooks/useMetaData";
 import Header from "../../components/Header";
 import GamePanel from "../../components/GamePanel";
+import UserContext from "../../components/contexts/UserContext";
+import { useContext } from "react";
 
 const index: NextPage = () => {
+  const user = useContext(UserContext);
   const games = [
     {
       name: "sex time",

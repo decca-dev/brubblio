@@ -21,7 +21,7 @@ const Home: NextPage = () => {
             </button>
             <button
               className="bg-violet-500 w-28 h-10 rounded-xl text-white hover:scale-95 hover:-translate-y-1 transition-all delay-100 duration-200 ease-in-out"
-              onClick={() => () => (location.href = "/rooms/new")}
+              onClick={() => () => (location.href = "/rooms/create")}
             >
               Create room
             </button>
