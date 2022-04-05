@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import UserContext from "./contexts/UserContext";
 
 const ChatBox = () => {
   const [messages, setMessages] = useState<ChatElementInterface[]>([]);
+  const user = useContext(UserContext);
 
   const sendMessage = () => {
     const chatbox = document.querySelector(".chatbox") as HTMLDivElement;
@@ -10,7 +12,7 @@ const ChatBox = () => {
     ) as HTMLTextAreaElement;
     const message = textArea.value;
     if (message !== "" || message.length > 0) {
-      setMessages([...messages!, { author: "ur mom", message: message }]);
+      setMessages([...messages!, { author: user.username, message: message }]);
       textArea.value = "";
       chatbox.scrollTop = chatbox.scrollHeight;
     } else {

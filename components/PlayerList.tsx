@@ -19,9 +19,9 @@ const PlayerElement = ({ avatar, name, score }: PlayerElementInterface) => {
   return (
     <div className="mb-3">
       <img
-        src={avatar}
+        src={"/assets/avatars/" + avatar + ".svg"}
         alt={name + `'s avatar`}
-        className="rounded-full w-12 h-12 inline-block align-middle"
+        className="rounded-full w-12 h-12 inline-block align-top mt-2"
       />
       <div className="inline-block align-middle">
         <p>{name}</p>
