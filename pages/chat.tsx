@@ -1,49 +1,53 @@
 import type { NextPage } from "next";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import * as socketIO from "socket.io-client";
 import UserContext from "../components/contexts/UserContext";
 import { useMetaData } from "../lib/hooks/useMetaData";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 const Chat: NextPage = () => {
   const [messages, setMessages] = useState<ChatElementInterface[]>([]);
-  const [connected, setConnected] = useState(false);
   const [message, setMessage] = useState("");
+  const [clients, setClients] = useState(0);
+  const socketRef =
+    useRef<socketIO.Socket<DefaultEventsMap, DefaultEventsMap>>();
   const user = useContext(UserContext);
 
-  useEffect((): any => {
+  useEffect(() => {
     const socket = socketIO.connect(window.location.origin, {
       path: "/api/socket",
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
     });
+
+    socketRef.current = socket;
 
     socket?.on("connect", () => {
       console.log(`Connected as ${socket?.id}`);
-      setConnected(true);
-      messages.push({
-        author: "Server",
-        message: `You have joined the chatroom!`,
-      });
-      setMessages([...messages]);
+      socket.emit("new-join");
     });
 
-    socket?.on("message", (content: ChatElementInterface) => {
-      messages.push(content);
-      setMessages([...messages]);
+    socket.on("user-left", (size) => {
+      setClients(size);
     });
 
-    if (socket) return () => socket.disconnect();
+    socket.on("user-join", (size) => {
+      setClients(size);
+    });
+
+    socket?.on("broadcast-message", (content: ChatElementInterface) => {
+      setMessages((messages) => [...messages, content]);
+    });
   }, []);
 
   const sendMessage = async () => {
     if (message) {
-      const resp = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ author: user.username, message: message }),
+      socketRef.current?.emit("new-message", {
+        author: user.username,
+        message: message,
       });
-
-      if (resp.ok) setMessage("");
+      setMessage("");
     } else {
       return;
     }
@@ -54,6 +58,7 @@ const Chat: NextPage = () => {
       {useMetaData("Chat", "Chat with fellow Brubblians", "/chat")}
       <div className="flex flex-col items-center mt-5 container">
         <div className="chatbox w-full h-96 bg-white shadow-gray-600 shadow-md flex flex-col overflow-y-scroll break-all">
+          <h1>{clients} online.</h1>
           {messages?.map((message, i) => {
             return (
               <div className="ml-3 mt-2">
