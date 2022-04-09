@@ -8,10 +8,7 @@ import {
 } from "unique-names-generator";
 import { useEffect, useState } from "react";
 import UserContext from "../components/contexts/UserContext";
-interface User {
-  username: string;
-  avatar: string;
-}
+import { User } from "../lib/types";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<User>();
@@ -23,7 +20,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         length: 2,
         separator: " ",
       });
-    const userAvatar = localStorage.getItem("avatar") || "1";
+    const userAvatar =
+      localStorage.getItem("avatar") ||
+      (Math.floor(Math.random() * 9) + 1).toString();
     setUser({ username: name, avatar: userAvatar });
   }, []);
 

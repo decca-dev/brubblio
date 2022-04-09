@@ -2,9 +2,12 @@ const { createServer } = require("http");
 const next = require("next");
 const { Server } = require("socket.io");
 const express = require("express");
+const { config } = require("dotenv");
+
+config({ path: ".env.local" });
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
+const hostname = process.env.HOSTNAME;
 const port = 3000;
 
 const app = next({ dev, hostname, port });
@@ -23,12 +26,23 @@ app.prepare().then(() => {
     socket.on("new-join", () => {
       io.emit("user-join", io.sockets.sockets.size);
     });
-    socket.on("new-message", (message) => {
-      io.emit("broadcast-message", message);
-    });
     socket.on("disconnect", () => {
       io.emit("user-left", io.sockets.sockets.size);
     });
+    socket.on("new-message", (chat) => {
+      io.emit("broadcast-message", chat);
+    });
+    socket.on("drawing", (data) => {
+      io.emit("drawing", data);
+    });
+    socket.on("clear", () => {
+      io.emit("clear-canvas");
+    });
+    socket.on("fill", (color) => {
+      io.emit("fill-canvas", color);
+    });
+    socket.on("newPrivateRoom", (user) => {});
+    socket.on("joinPrivateRoom", ({ roomID, user }) => {});
   });
 
   server.listen(port, () => {

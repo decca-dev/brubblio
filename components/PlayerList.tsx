@@ -1,11 +1,13 @@
-const PlayerList = ({ players }: PlayerListInterface) => {
+import { Player } from "../lib/types";
+
+const PlayerList = ({ players }: PlayerListOptions) => {
   return (
     <div className="playerlist w-60 h-96 bg-white shadow-gray-600 shadow-md rounded-l-3xl overflow-y-scroll flex flex-col">
       {players.map((player, i) => {
         return (
           <PlayerElement
             avatar={player.avatar}
-            name={player.name}
+            username={player.username}
             score={player.score}
             key={i}
           />
@@ -15,16 +17,16 @@ const PlayerList = ({ players }: PlayerListInterface) => {
   );
 };
 
-const PlayerElement = ({ avatar, name, score }: PlayerElementInterface) => {
+const PlayerElement = ({ avatar, username, score }: Player) => {
   return (
     <div className="mb-3">
       <img
         src={"/assets/avatars/" + avatar + ".svg"}
-        alt={name + `'s avatar`}
+        alt={username + `'s avatar`}
         className="rounded-full w-12 h-12 inline-block align-top mt-2"
       />
       <div className="inline-block align-middle">
-        <p>{name}</p>
+        <p>{username}</p>
         <p className="text-xs">
           <strong>Score:</strong> {score}
         </p>
@@ -33,14 +35,8 @@ const PlayerElement = ({ avatar, name, score }: PlayerElementInterface) => {
   );
 };
 
-interface PlayerElementInterface {
-  avatar: string;
-  name: string;
-  score: number;
-}
-
-interface PlayerListInterface {
-  players: PlayerElementInterface[];
+interface PlayerListOptions {
+  players: Player[];
 }
 
 export default PlayerList;

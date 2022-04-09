@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  env: {},
+  env: {
+    URL: process.env.URL,
+  },
 };
 
 module.exports = nextConfig;

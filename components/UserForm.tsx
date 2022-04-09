@@ -17,13 +17,12 @@ import Avatar8 from "../public/assets/avatars/8.svg";
 import Toast from "./Toast";
 
 const UserForm = () => {
-  const [username, setUsername] = useState(
-    uniqueNamesGenerator({
-      dictionaries: [adjectives, animals, colors],
-      length: 2,
-      separator: " ",
-    })
-  );
+  const randomUsername = uniqueNamesGenerator({
+    dictionaries: [adjectives, animals, colors],
+    length: 2,
+    separator: " ",
+  });
+  const [username, setUsername] = useState(randomUsername);
   const [avatar, setAvatar] = useState(1);
   const [isSaved, setIsSaved] = useState(false);
 
@@ -39,9 +38,19 @@ const UserForm = () => {
   }, []);
 
   const save = () => {
-    localStorage.setItem("username", username);
-    localStorage.setItem("avatar", avatar.toString());
-    setIsSaved(true);
+    if (username === "") {
+      setUsername(randomUsername);
+      localStorage.setItem("username", randomUsername);
+      localStorage.setItem("avatar", avatar.toString());
+      setIsSaved(true);
+    } else {
+      localStorage.setItem(
+        "username",
+        username === "" ? randomUsername : username
+      );
+      localStorage.setItem("avatar", avatar.toString());
+      setIsSaved(true);
+    }
   };
 
   return (
@@ -65,6 +74,7 @@ const UserForm = () => {
         src={"/assets/avatars/" + avatar + ".svg"}
         width={200}
         height={200}
+        className="mb-24"
       />
       <div
         className="grid grid-cols-4 gap-5 w-full h-full"

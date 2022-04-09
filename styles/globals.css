@@ -74,6 +74,34 @@ input[type="color"]::-webkit-color-swatch {
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
 
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 2px solid #fff;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 120px;
+  background-color: rgb(44, 42, 42);
+  color: #ffff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
 @-webkit-keyframes fadein {
   from {
     bottom: 0;

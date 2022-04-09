@@ -5,70 +5,71 @@ import GamePanel from "../../components/GamePanel";
 import UserContext from "../../components/contexts/UserContext";
 import { useContext } from "react";
 
+const games = [
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 9,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+  {
+    name: "sex time",
+    players: 7,
+    id: "lol",
+  },
+];
+
 const index: NextPage = () => {
   const user = useContext(UserContext);
-  const games = [
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 9,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-    {
-      name: "sex time",
-      players: 7,
-      id: "lol",
-    },
-  ];
 
   return (
     <div className="container">

@@ -1,19 +1,34 @@
-import { useState, useEffect, useRef, MouseEvent, RefObject } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  MouseEvent,
+  RefObject,
+  MutableRefObject,
+} from "react";
 import Palette from "./Palette";
+import { Socket } from "socket.io-client";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
-interface BaseStyles {
+interface Base {
   color: string;
   lineWidth: number;
+  x?: number;
+  y?: number;
 }
 
-const DrawingCanvas = () => {
+interface CanvasOptions {
+  socket: Socket<DefaultEventsMap, DefaultEventsMap>;
+  canvasRef: RefObject<HTMLCanvasElement>;
+  ctxRef: MutableRefObject<CanvasRenderingContext2D>;
+}
+
+const DrawingCanvas = ({ socket, canvasRef, ctxRef }: CanvasOptions) => {
   const [width, setWidth] = useState(10);
   const [color, setColor] = useState("black");
   const [isDrawing, setIsDrawing] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
-  const baseStyles: BaseStyles = {
+  const current: Base = {
     color: color,
     lineWidth: width,
   };
@@ -33,23 +48,67 @@ const DrawingCanvas = () => {
   };
 
   const startDrawing = (e: MouseEvent) => {
+    current.x =
+      (e.clientX - canvasRef.current?.getBoundingClientRect().left!) /
+      canvasRef.current?.width!;
+    current.y =
+      (e.clientY - canvasRef.current?.getBoundingClientRect().top!) /
+      canvasRef.current?.height!;
     setIsDrawing(true);
     draw(e);
   };
 
-  const endDrawing = () => {
+  const endDrawing = (e: MouseEvent) => {
     setIsDrawing(false);
     ctxRef.current?.beginPath();
+    socket.emit("drawing", {
+      start: {
+        x: current.x,
+        y: current.y,
+      },
+      end: {
+        x:
+          (e.clientX - canvasRef.current?.getBoundingClientRect().left!) /
+          canvasRef.current?.width!,
+        y:
+          (e.clientY - canvasRef.current?.getBoundingClientRect().top!) /
+          canvasRef.current?.height!,
+      },
+      color: current.color,
+      lineWidth: current.lineWidth,
+    });
   };
 
   const draw = (e: MouseEvent) => {
     if (!isDrawing) return;
     ctxRef.current!.lineCap = "round";
-    ctxRef.current!.lineWidth = baseStyles.lineWidth;
-    ctxRef.current!.strokeStyle = baseStyles.color;
+    ctxRef.current!.lineWidth = current.lineWidth;
+    ctxRef.current!.strokeStyle = current.color;
     const position = getMousePos(canvasRef, e);
     ctxRef.current!.lineTo(position.x, position.y);
     ctxRef.current!.stroke();
+    socket.emit("drawing", {
+      start: {
+        x: current.x,
+        y: current.y,
+      },
+      end: {
+        x:
+          (e.clientX - canvasRef.current?.getBoundingClientRect().left!) /
+          canvasRef.current?.width!,
+        y:
+          (e.clientY - canvasRef.current?.getBoundingClientRect().top!) /
+          canvasRef.current?.height!,
+      },
+      color: current.color,
+      lineWidth: current.lineWidth,
+    });
+    current.x =
+      (e.clientX - canvasRef.current?.getBoundingClientRect().left!) /
+      canvasRef.current?.width!;
+    current.y =
+      (e.clientY - canvasRef.current?.getBoundingClientRect().top!) /
+      canvasRef.current?.height!;
   };
 
   return (
@@ -71,6 +130,7 @@ const DrawingCanvas = () => {
           setColor={setColor}
           canvasRef={canvasRef}
           ctxRef={ctxRef}
+          socket={socket}
         />
       </div>
     </div>

@@ -1,9 +1,18 @@
+export interface ChatContent {
+  author: string;
+  message: string;
+}
+
+export interface User {
+  username: string;
+  avatar: string;
+}
+
 export interface RoomOptions {
-  name: string;
+  owner: Player;
   players: Player[];
-  type: RoomType;
   rounds: number;
-  turnOf: Player;
+  drawingTime: number;
 }
 
 export interface Player {
@@ -11,5 +20,3 @@ export interface Player {
   avatar: string;
   score: number;
 }
-
-export type RoomType = "public" | "private";

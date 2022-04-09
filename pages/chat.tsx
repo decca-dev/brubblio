@@ -4,9 +4,10 @@ import * as socketIO from "socket.io-client";
 import UserContext from "../components/contexts/UserContext";
 import { useMetaData } from "../lib/hooks/useMetaData";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { ChatContent } from "../lib/types";
 
 const Chat: NextPage = () => {
-  const [messages, setMessages] = useState<ChatElementInterface[]>([]);
+  const [messages, setMessages] = useState<ChatContent[]>([]);
   const [message, setMessage] = useState("");
   const [clients, setClients] = useState(0);
   const socketRef =
@@ -25,7 +26,7 @@ const Chat: NextPage = () => {
 
     socket?.on("connect", () => {
       console.log(`Connected as ${socket?.id}`);
-      socket.emit("new-join");
+      socket.emit("new-join", user!);
     });
 
     socket.on("user-left", (size) => {
@@ -36,7 +37,7 @@ const Chat: NextPage = () => {
       setClients(size);
     });
 
-    socket?.on("broadcast-message", (content: ChatElementInterface) => {
+    socket?.on("broadcast-message", (content: ChatContent) => {
       setMessages((messages) => [...messages, content]);
     });
   }, []);
@@ -58,7 +59,9 @@ const Chat: NextPage = () => {
       {useMetaData("Chat", "Chat with fellow Brubblians", "/chat")}
       <div className="flex flex-col items-center mt-5 container">
         <div className="chatbox w-full h-96 bg-white shadow-gray-600 shadow-md flex flex-col overflow-y-scroll break-all">
-          <h1>{clients} online.</h1>
+          <h1 className="text-white w-24 h-6 bg-green-600 text-center m-3">
+            {clients} online.
+          </h1>
           {messages?.map((message, i) => {
             return (
               <div className="ml-3 mt-2">
@@ -120,10 +123,5 @@ const Chat: NextPage = () => {
     </>
   );
 };
-
-interface ChatElementInterface {
-  author: string;
-  message: string;
-}
 
 export default Chat;
