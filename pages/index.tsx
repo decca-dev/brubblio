@@ -1,9 +1,9 @@
-import type { NextPage } from "next";
+import type { NextPageContext } from "next";
 import { useMetaData } from "../lib/hooks/useMetaData";
 import UserForm from "../components/UserForm";
 import Header from "../components/Header";
 
-const Home: NextPage = () => {
+const Home = ({ roomID }: { roomID: string }) => {
   return (
     <>
       {useMetaData("Home", "Brubblio", "/")}
@@ -30,6 +30,20 @@ const Home: NextPage = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps = (context: NextPageContext) => {
+  if (context.query?.id) {
+    return {
+      props: {
+        roomID: context.query.id,
+      },
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
 };
 
 export default Home;

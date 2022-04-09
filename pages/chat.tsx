@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import { useEffect, useState, useContext, useRef } from "react";
 import * as socketIO from "socket.io-client";
 import UserContext from "../components/contexts/UserContext";
@@ -6,7 +5,7 @@ import { useMetaData } from "../lib/hooks/useMetaData";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { ChatContent } from "../lib/types";
 
-const Chat: NextPage = () => {
+const Chat = () => {
   const [messages, setMessages] = useState<ChatContent[]>([]);
   const [message, setMessage] = useState("");
   const [clients, setClients] = useState(0);
