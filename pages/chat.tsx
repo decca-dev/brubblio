@@ -25,14 +25,14 @@ const Chat = () => {
 
     socket?.on("connect", () => {
       console.log(`Connected as ${socket?.id}`);
-      socket.emit("new-join", user!);
+      socket.emit("chat-new-join", user!);
     });
 
-    socket.on("user-left", (size) => {
+    socket.on("chat-user-left", (size) => {
       setClients(size);
     });
 
-    socket.on("user-join", (size) => {
+    socket.on("chat-user-join", (size) => {
       setClients(size);
     });
 
@@ -102,7 +102,7 @@ const Chat = () => {
             placeholder="message"
             rows={2}
             cols={50}
-            className="inline-block align-middle rounded-md border border-black"
+            className="resize-none inline-block align-middle rounded-md border border-black"
             value={message}
             onChange={(e: any) => setMessage(e.target.value)}
             onKeyDown={(e: any) => {
@@ -112,7 +112,7 @@ const Chat = () => {
             }}
           ></textarea>
           <button
-            className="inline-block align-middle ml-5 w-16 h-10 rounded-2xl text-white bg-green-600 hover:bg-green-800 transition-colors delay-150 ease-in-out duration-300"
+            className="inline-block align-middle w-16 h-10 rounded-xl ml-3 text-white bg-green-600 hover:bg-green-800 transition-colors delay-150 ease-in-out duration-300"
             onClick={sendMessage}
           >
             Send

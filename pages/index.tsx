@@ -13,18 +13,30 @@ const Home = ({ roomID }: { roomID: string }) => {
           <UserForm />
           <div className="my-5"></div>
           <div className="flex flex-row items-center justify-evenly">
-            <button
-              className="bg-green-500 w-28 h-10 rounded-xl text-white hover:scale-95 hover:-translate-y-1 transition-all delay-100 duration-200 ease-in-out"
-              onClick={() => (location.href = "/rooms")}
-            >
-              Browse rooms
-            </button>
-            <button
-              className="bg-violet-500 w-28 h-10 rounded-xl text-white hover:scale-95 hover:-translate-y-1 transition-all delay-100 duration-200 ease-in-out"
-              onClick={() => (location.href = "/rooms/create")}
-            >
-              Create room
-            </button>
+            {typeof roomID !== "undefined" && (
+              <button
+                className="bg-yellow-500 w-28 h-10 rounded-xl text-white hover:scale-95 hover:-translate-y-1 transition-all delay-100 duration-200 ease-in-out"
+                onClick={() => (location.href = `/rooms/${roomID}`)}
+              >
+                Join room
+              </button>
+            )}
+            {typeof roomID === "undefined" && (
+              <div>
+                <button
+                  className="bg-green-500 w-28 h-10 rounded-xl text-white hover:scale-95 hover:-translate-y-1 transition-all delay-100 duration-200 ease-in-out"
+                  onClick={() => (location.href = "/rooms")}
+                >
+                  Browse rooms
+                </button>
+                <button
+                  className="bg-violet-500 w-28 h-10 rounded-xl text-white hover:scale-95 hover:-translate-y-1 transition-all delay-100 duration-200 ease-in-out"
+                  onClick={() => (location.href = "/rooms/create")}
+                >
+                  Create room
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -3,13 +3,22 @@ import Header from "../../components/Header";
 import { useState, useContext, useRef } from "react";
 import { useMetaData } from "../../lib/hooks/useMetaData";
 import UserContext from "../../components/contexts/UserContext";
+import Toast from "../../components/Toast";
 
 const create: NextPage = () => {
   const [words, setWords] = useState<string[]>([]);
-  const [link, setLink] = useState(`${process.env.URL}/rooms`);
+  const [link, setLink] = useState(
+    `${process.env.URL}?id=${Date.now().toString(36)}`
+  );
+  const [isCopied, setIsCopied] = useState(false);
   const rRef = useRef<HTMLSelectElement>(null);
   const dtRef = useRef<HTMLSelectElement>(null);
   const user = useContext(UserContext);
+
+  const copy = () => {
+    navigator.clipboard.writeText(link);
+    setIsCopied(true);
+  };
 
   const createRoom = () => {};
 
@@ -105,13 +114,20 @@ const create: NextPage = () => {
             </span>
             <button
               className="inline-block align-middle border border-black py-2 -ml-1 w-12 bg-yellow-500 font-semibold"
-              onClick={() => navigator.clipboard.writeText(link)}
+              onClick={copy}
             >
               Copy
             </button>
           </div>
         </div>
       </div>
+      {isCopied && (
+        <Toast
+          type="success"
+          title="Copied!"
+          description="The link was copied."
+        />
+      )}
       <div className="pb-5"></div>
     </>
   );

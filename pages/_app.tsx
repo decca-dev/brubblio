@@ -12,6 +12,7 @@ import { User } from "../lib/types";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<User>();
+  const [show, setShow] = useState(false);
   useEffect(() => {
     const name =
       localStorage.getItem("username") ||
@@ -24,13 +25,22 @@ function MyApp({ Component, pageProps }: AppProps) {
       localStorage.getItem("avatar") ||
       (Math.floor(Math.random() * 9) + 1).toString();
     setUser({ username: name, avatar: userAvatar });
+    setShow(true);
   }, []);
 
-  return (
-    <UserContext.Provider value={user!}>
-      <Component {...pageProps} />
-    </UserContext.Provider>
-  );
+  if (!show) {
+    return null;
+  }
+
+  if (typeof window === "undefined") {
+    return <></>;
+  } else {
+    return (
+      <UserContext.Provider value={user!}>
+        <Component {...pageProps} />
+      </UserContext.Provider>
+    );
+  }
 }
 
 export default MyApp;

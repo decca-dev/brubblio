@@ -15,7 +15,6 @@ const ChatBox = ({
 
   useEffect(() => {
     socket?.on("broadcast-message", (content: ChatInterface) => {
-      console.log("hehehecfdsdsds");
       setMessages((messages) => [...messages, content]);
     });
   }, []);
@@ -53,7 +52,7 @@ const ChatBox = ({
           placeholder="message"
           rows={2}
           cols={25}
-          className="inline-block align-middle rounded-md border border-black"
+          className="resize-none inline-block align-middle rounded-md border border-black"
           value={message}
           onChange={(e: any) => setMessage(e.target.value)}
         ></textarea>

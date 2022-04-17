@@ -22,12 +22,16 @@ app.prepare().then(() => {
     return handle(req, res);
   });
 
+  let chatClients = 0;
+
   io.on("connection", (socket) => {
-    socket.on("new-join", () => {
-      io.emit("user-join", io.sockets.sockets.size);
+    socket.on("chat-new-join", () => {
+      chatClients++;
+      io.emit("chat-user-join", chatClients);
     });
     socket.on("disconnect", () => {
-      io.emit("user-left", io.sockets.sockets.size);
+      chatClients--;
+      io.emit("chat-user-left", chatClients);
     });
     socket.on("new-message", (chat) => {
       io.emit("broadcast-message", chat);
