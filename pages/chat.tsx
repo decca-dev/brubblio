@@ -1,17 +1,17 @@
-import { useEffect, useState, useContext, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import * as socketIO from "socket.io-client";
-import UserContext from "../components/contexts/UserContext";
 import { useMetaData } from "../lib/hooks/useMetaData";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { ChatContent } from "../lib/types";
+import { ChatContent, User } from "../lib/types";
+import { getSession } from "next-auth/react";
+import { NextPageContext } from "next";
 
-const Chat = () => {
+const Chat = ({ user }: { user: User }) => {
   const [messages, setMessages] = useState<ChatContent[]>([]);
   const [message, setMessage] = useState("");
   const [clients, setClients] = useState(0);
   const socketRef =
     useRef<socketIO.Socket<DefaultEventsMap, DefaultEventsMap>>();
-  const user = useContext(UserContext);
 
   useEffect(() => {
     const socket = socketIO.connect(window.location.origin, {
@@ -25,7 +25,11 @@ const Chat = () => {
 
     socket?.on("connect", () => {
       console.log(`Connected as ${socket?.id}`);
-      socket.emit("chat-new-join", user!);
+      socket.emit("chat-new-join");
+      socket.emit("new-message", {
+        author: "Server",
+        message: `${user?.username} joined!`,
+      });
     });
 
     socket.on("chat-user-left", (size) => {
@@ -121,6 +125,18 @@ const Chat = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  const session = await getSession(ctx);
+  return {
+    props: {
+      user: {
+        username: session?.user?.name,
+        id: session?.user?.id,
+      },
+    },
+  };
 };
 
 export default Chat;

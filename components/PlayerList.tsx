@@ -9,6 +9,7 @@ const PlayerList = ({ players }: PlayerListOptions) => {
             avatar={player.avatar}
             username={player.username}
             score={player.score}
+            id={player.id}
             key={i}
           />
         );
@@ -17,7 +18,7 @@ const PlayerList = ({ players }: PlayerListOptions) => {
   );
 };
 
-const PlayerElement = ({ avatar, username, score }: Player) => {
+const PlayerElement = ({ avatar, username, score, id }: Player) => {
   return (
     <div className="mb-3">
       <img

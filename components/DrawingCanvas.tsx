@@ -1,7 +1,6 @@
 import {
   useState,
   useEffect,
-  useRef,
   MouseEvent,
   RefObject,
   MutableRefObject,
@@ -118,7 +117,7 @@ const DrawingCanvas = ({ socket, canvasRef, ctxRef }: CanvasOptions) => {
         onMouseUp={endDrawing}
         onMouseMove={draw}
         ref={canvasRef}
-        className="bg-white border border-black rounded-lg ml-3 mr-3"
+        className={"bg-white border border-black rounded-lg ml-3 mr-3"}
         width={750}
         height={500}
       />

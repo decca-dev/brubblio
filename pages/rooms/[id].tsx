@@ -1,24 +1,11 @@
-import type { NextPage } from "next";
+import type { NextPageContext } from "next";
 import { useMetaData } from "../../lib/hooks/useMetaData";
-import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import * as socketIO from "socket.io-client";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { ChatContent, User } from "../../lib/types";
+import { ChatContent, User, RoomOptions } from "../../lib/types";
 import GameScreen from "../../components/GameScreen";
-
-const players = [
-  {
-    username: "lol",
-    avatar: "1",
-    score: 69,
-  },
-  {
-    username: "lol",
-    avatar: "1",
-    score: 69,
-  },
-];
+import { useSession } from "next-auth/react";
 
 type ChatInterface = ChatContent & { user: User };
 
@@ -35,11 +22,10 @@ interface DrawingData {
   lineWidth: number;
 }
 
-const room: NextPage = () => {
+const Room = ({ room }: { room: RoomOptions }) => {
+  const { data: session } = useSession();
   const [messages, setMessages] = useState<ChatInterface[]>([]);
   const [message, setMessage] = useState("");
-  const router = useRouter();
-  const roomName = router.asPath.replace("/rooms/", "");
   const socketRef =
     useRef<socketIO.Socket<DefaultEventsMap, DefaultEventsMap>>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -100,9 +86,9 @@ const room: NextPage = () => {
   return (
     <>
       {useMetaData(
-        roomName,
-        `Join the ${roomName} brubblio room.`,
-        router.asPath
+        room.name,
+        `Join the ${room.name} brubblio room.`,
+        `/rooms/${room.id}`
       )}
       <GameScreen
         message={message}
@@ -110,12 +96,36 @@ const room: NextPage = () => {
         messages={messages}
         setMessages={setMessages}
         socket={socketRef.current!}
-        players={players}
+        players={room.players!}
         canvasRef={canvasRef}
         ctxRef={ctxRef}
+        user={{
+          username: session?.user?.name!,
+          id: session?.user?.id!,
+          avatar:
+            localStorage.getItem("avatar") ||
+            (Math.floor(Math.random() * 8) + 1).toString(),
+        }}
       />
     </>
   );
 };
 
-export default room;
+export const getServerSideProps = async (context: NextPageContext) => {
+  const res = await fetch(
+    `${process.env.NEXTAUTH_URL}/api/rooms/${context.req?.url?.replace(
+      "/rooms/",
+      ""
+    )}`
+  );
+  const data = await res.json();
+  if (res.ok) {
+    return {
+      props: {
+        room: data.data,
+      },
+    };
+  }
+};
+
+export default Room;

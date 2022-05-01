@@ -1,10 +1,4 @@
 import { useState, useEffect } from "react";
-import {
-  uniqueNamesGenerator,
-  adjectives,
-  colors,
-  animals,
-} from "unique-names-generator";
 import Image from "next/image";
 import Avatar1 from "../public/assets/avatars/1.svg";
 import Avatar2 from "../public/assets/avatars/2.svg";
@@ -16,21 +10,13 @@ import Avatar7 from "../public/assets/avatars/7.svg";
 import Avatar8 from "../public/assets/avatars/8.svg";
 import Toast from "./Toast";
 
-const UserForm = () => {
-  const randomUsername = uniqueNamesGenerator({
-    dictionaries: [adjectives, animals, colors],
-    length: 2,
-    separator: " ",
-  });
-  const [username, setUsername] = useState(randomUsername);
-  const [avatar, setAvatar] = useState(1);
+const UserForm = ({ username }: { username: string }) => {
+  const [avatar, setAvatar] = useState(Math.floor(Math.random() * 8) + 1);
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
-    const name = localStorage.getItem("username");
     const userAvatar = localStorage.getItem("avatar");
-    if (name && avatar) {
-      setUsername(name);
+    if (avatar) {
       setAvatar(Number(userAvatar));
     } else {
       return;
@@ -38,36 +24,15 @@ const UserForm = () => {
   }, []);
 
   const save = () => {
-    if (username === "") {
-      setUsername(randomUsername);
-      localStorage.setItem("username", randomUsername);
-      localStorage.setItem("avatar", avatar.toString());
-      setIsSaved(true);
-    } else {
-      localStorage.setItem(
-        "username",
-        username === "" ? randomUsername : username
-      );
-      localStorage.setItem("avatar", avatar.toString());
-      setIsSaved(true);
-    }
+    localStorage.setItem("avatar", avatar.toString());
+    setIsSaved(true);
   };
 
   return (
     <div className="flex flex-col justify-center items-center p-10 rounded-3xl shadow-2xl h-full bg-white">
-      <label className="font-bold">Name</label>
-      <br />
-      <input
-        type="text"
-        name="name"
-        id="name"
-        value={username}
-        className="w-56 h-10 bg-gray-400 rounded-xl border-none pl-3 focus:underline"
-        onChange={(e: any) => {
-          setUsername(e.target.value);
-          setIsSaved(false);
-        }}
-      />
+      <h1 className="border-2 border-gray-300 w-44 p-1 text-center">
+        {username}
+      </h1>
       <br />
       <label className="font-bold mb-5">Avatar</label>
       <img

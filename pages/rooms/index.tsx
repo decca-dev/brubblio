@@ -1,76 +1,16 @@
-import type { NextPage } from "next";
+import type { NextPageContext } from "next";
 import { useMetaData } from "../../lib/hooks/useMetaData";
 import Header from "../../components/Header";
 import GamePanel from "../../components/GamePanel";
-import UserContext from "../../components/contexts/UserContext";
-import { useContext } from "react";
+import { Player, RoomOptions } from "../../lib/types";
+interface Game {
+  name: string;
+  players: Player[];
+  id: string;
+}
 
-const games = [
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 9,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-  {
-    name: "sex time",
-    players: 7,
-    id: "lol",
-  },
-];
-
-const index: NextPage = () => {
-  const user = useContext(UserContext);
-
+const index = ({ games }: { games: Game[] }) => {
+  console.log(games);
   return (
     <div className="container">
       {useMetaData("Rooms", "Browse all the available rooms", "/rooms")}
@@ -78,6 +18,18 @@ const index: NextPage = () => {
       <GamePanel games={games} />
     </div>
   );
+};
+
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/rooms`);
+  const data: { error: boolean; message: string; data: RoomOptions[] } =
+    await res.json();
+
+  return {
+    props: {
+      games: data.data.filter((game) => game.has_started === false),
+    },
+  };
 };
 
 export default index;

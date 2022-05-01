@@ -1,5 +1,4 @@
-import { useContext, useEffect, Dispatch, SetStateAction } from "react";
-import UserContext from "./contexts/UserContext";
+import { useEffect, Dispatch, SetStateAction } from "react";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { Socket } from "socket.io-client";
 import { ChatContent, User } from "../lib/types";
@@ -10,9 +9,8 @@ const ChatBox = ({
   setMessages,
   message,
   setMessage,
+  author,
 }: ChatBoxInterface) => {
-  const user = useContext(UserContext);
-
   useEffect(() => {
     socket?.on("broadcast-message", (content: ChatInterface) => {
       setMessages((messages) => [...messages, content]);
@@ -22,7 +20,7 @@ const ChatBox = ({
   const sendMessage = () => {
     if (message) {
       socket?.emit("new-message", {
-        author: user.username,
+        author: author.username,
         message: message,
       });
       setMessage("");
@@ -39,7 +37,7 @@ const ChatBox = ({
             <ChatElement
               author={message.author}
               message={message.message}
-              user={user}
+              user={author}
               key={i}
             />
           );
@@ -96,6 +94,7 @@ interface ChatBoxInterface {
   setMessages: Dispatch<SetStateAction<ChatInterface[]>>;
   message: string;
   setMessage: Dispatch<SetStateAction<string>>;
+  author: User;
 }
 
 export default ChatBox;

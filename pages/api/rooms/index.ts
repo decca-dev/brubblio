@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../lib/helpers/dbConnect";
-import { Room } from "../../../lib/models/Room";
+import { RoomHelper } from "../../../lib/engine/Room";
 import { RoomOptions } from "../../../lib/types/index";
 
 dbConnect();
@@ -13,7 +13,7 @@ export default async function handler(
   switch (method) {
     case "GET":
       try {
-        const rooms = await Room.find({});
+        const rooms = await RoomHelper.getRooms();
         res.status(200).json({
           success: true,
           message: "Room data was found.",
@@ -28,21 +28,29 @@ export default async function handler(
       break;
     case "POST":
       try {
-        const { owner, players, rounds, drawingTime }: RoomOptions = req.body;
-        const room = new Room({
+        const {
+          name,
+          owner,
+          rounds,
+          drawing_time,
+          custom_words,
+          type,
+        }: RoomOptions = req.body;
+        const room = await RoomHelper.create({
+          name: name,
           owner: owner,
-          players: players,
           rounds: rounds,
-          drawingTime: drawingTime,
+          drawing_time: drawing_time,
+          custom_words: custom_words,
+          type: type,
         });
-        await room.save();
         res.status(200).json({
           success: true,
           message: "Room was created successfully",
           data: room,
         });
       } catch (error: any) {
-        res.status(200).json({
+        res.status(400).json({
           success: false,
           message: `Room was not created. Error: ${error.message}`,
         });
