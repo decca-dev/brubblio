@@ -18,7 +18,7 @@ app.prepare().then(() => {
   const server = createServer(expressApp);
   const io = new Server(server, { path: "/api/socket" });
 
-  expressApp.get("*", (req, res) => {
+  expressApp.all("*", (req, res) => {
     return handle(req, res);
   });
 
